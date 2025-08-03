@@ -6,6 +6,7 @@ mod tests {
 
     #[test]
     fn it_works() {
+        let vec_ex = Vec::<u8>::new();
         let result = myvec::MyVec::<u8>::default();
     }
 }
