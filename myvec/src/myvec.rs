@@ -66,3 +66,25 @@ impl<T> MyVec<T> {
         self.pointer
     }
 }
+
+impl<T> Drop for MyVec<T> {
+    fn drop(&mut self) {
+        let cap = self.get_capacity();
+        if cap > 0 {
+            for i in 0..cap {
+                unsafe {
+                    let ptr = self.get_pointer().as_ptr().add(i as usize);
+                    ptr.drop_in_place();
+                }
+            }
+
+            unsafe {
+                alloc::dealloc(
+                    self.get_pointer().as_ptr() as *mut u8,
+                    Layout::array::<T>(cap as usize).unwrap(),
+                );
+            }
+        }
+    }
+}
+
